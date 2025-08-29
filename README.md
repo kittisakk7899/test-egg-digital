@@ -29,6 +29,7 @@ npm install
 
 2. **ตั้งค่า environment variables**
 สร้างไฟล์ .env.local แล้วเพิ่มค่าดังนี้:
+```text
 API Gateway base URL
 NEXT_PUBLIC_API_BASE_URL=https://<api-id>.execute-api.<region>.amazonaws.com/dev
 
@@ -40,6 +41,7 @@ Lambda functions
 AWS_REGION=<your-region>
 USER_POOL_ID=<your-user-pool-id>
 CLIENT_ID=<your-client-id>
+```
 
 3. **รันโปรเจกต์**
 ```bash
