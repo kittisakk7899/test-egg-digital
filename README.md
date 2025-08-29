@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Egg Digital Lambda App
 
-## Getting Started
+โปรเจกต์นี้ประกอบด้วย **AWS Lambda functions** สำหรับจัดการผู้ใช้ด้วย **Cognito** และ **DynamoDB** พร้อม **Next.js frontend** และรวม **unit tests** โดยใช้ **Jest**
 
-First, run the development server:
+---
 
+## ภาพรวมสถาปัตยกรรม (Architecture Overview)
+
+- **Frontend:** Next.js application
+- **Backend:** AWS Lambda functions
+  - `createUserProfile` – สร้างผู้ใช้ใหม่ใน Cognito และเก็บโปรไฟล์ใน DynamoDB
+  - `signin` – ตรวจสอบการเข้าสู่ระบบของผู้ใช้กับ Cognito
+  - `refreshToken` – รีเฟรช token ของ Cognito
+  - `getProfile` – ดึงข้อมูลโปรไฟล์ผู้ใช้จาก DynamoDB
+  - `updateProfile` – อัปเดตโปรไฟล์ผู้ใช้ใน DynamoDB
+- **AWS Services**
+  - **Cognito** – จัดการ authentication และ user management
+  - **DynamoDB** – เก็บข้อมูลโปรไฟล์ผู้ใช้
+  - **API Gateway** – เปิด endpoint ของ Lambda functions เป็น HTTP
+
+---
+
+## การติดตั้งและใช้งาน (How to Deploy the App)
+
+1. **ติดตั้ง dependencies**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **ตั้งค่า environment variables**
+สร้างไฟล์ .env.local แล้วเพิ่มค่าดังนี้:
+# API Gateway base URL
+NEXT_PUBLIC_API_BASE_URL=https://<api-id>.execute-api.<region>.amazonaws.com/dev
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Cognito
+NEXT_PUBLIC_COGNITO_CLIENT_ID=<your-client-id>
+NEXT_PUBLIC_COGNITO_REGION=<your-region>
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Lambda functions
+AWS_REGION=<your-region>
+USER_POOL_ID=<your-user-pool-id>
+CLIENT_ID=<your-client-id>
 
-## Learn More
+3. **รันโปรเจกต์**
+```bash
+npm run dev      # โหมดพัฒนา
+npm run build    # สร้าง build สำหรับ production
+npm run start    # เริ่ม server
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. **การทดสอบ (How to Test the App)**
+รัน unit tests ด้วย Jest:
+```bash
+npm test           # รันทดสอบทั้งหมด
+npm test -- --watch  # รันแบบ watch mode
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+ตัวอย่างผลลัพธ์:
+```text
+Test Suites: 5 passed, 5 total
+Tests:       21 passed, 21 total
+Snapshots:   0 total
+Time:        0.678 s
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
